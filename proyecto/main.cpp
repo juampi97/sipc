@@ -50,7 +50,7 @@ int main(int argc, char** argv)
         // creamos el objeto para la substracci�n de fondo
 	MyBGSubtractorColor back(cap);
 	// creamos el objeto para el reconocimiento de gestos
-
+	HandGesture rec_gesto;
 	// iniciamos el proceso de obtenci�n del modelo del fondo
 	back.LearnModel();
 
@@ -71,10 +71,15 @@ int main(int argc, char** argv)
                 // CODIGO 2.1
                 // limpiar la m�scara del fondo de ruido
                 //...
+		int dilat = 1;
+                Mat element = getStructuringElement(MORPH_RECT,Size(2 * dilat + 1, 2 * dilat + 1), Point(dilat, dilat));
 
+		erode(bgmask,dst,element);
+		dilate(dst,bgmask,element);
+		medianBlur(bgmask,bgmask,5);
 
 		// deteccion de las caracter�sticas de la mano
-
+		rec_gesto.FeaturesDetection(bgmask,frame);
                 // mostramos el resultado de la sobstracci�n de fondo
 
                 // mostramos el resultado del reconocimento de gestos
